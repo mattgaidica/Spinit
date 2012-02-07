@@ -5,8 +5,15 @@
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <style>
+    .sidebar-nav {
+      height:319px;
+      overflow-y:scroll;
+      overflow-x:hidden;
+    }
+  </style>
 </head>
-<body>
+<body style="padding-top:40px;padding-bottom:20px;border-top:3px solid #00ccff;">
 
 <%= yield %>
 

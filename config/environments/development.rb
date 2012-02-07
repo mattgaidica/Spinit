@@ -27,4 +27,9 @@ Spinit::Application.configure do
 
   # Expands the lines which load the assets
   config.assets.debug = true
+
+  require 'pusher'
+  Pusher.app_id = '14974'
+  Pusher.key    = '515523af647ad18b0346'
+  Pusher.secret = '011be6144e42c0e1832f'
 end
