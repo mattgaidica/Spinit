@@ -1,0 +1,193 @@
+
+<div class="row-fluid">
+
+  <div class="span9">
+    <div id="map" style="height:300px;" class="well"></div>
+  </div><!--/span-->
+
+  <div class="span3">
+    <button data-toggle="modal" data-target="#modal" id="invite" style="width:100%;padding:15px;font-size:18px;margin-bottom:15px;" class="btn">Invite Friends</button>
+    <div style="padding:9px 0;" class="well sidebar-nav">
+      <ul class="nav nav-list">
+        <li class="nav-header">Sidebar</li>
+        <li class="active"><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li class="nav-header">Sidebar</li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li class="nav-header">Sidebar</li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+        <li><a href="#">Link</a></li>
+      </ul>
+    </div><!--/.well -->
+  </div><!--/span-->
+
+</div><!--/row-->
+
+<div style="margin:10px 0 20px;height:117px;" class="row-fluid">
+  <div class="span3">
+    <div style="padding:20px 0px 20px 80px;">
+      <div id="counter"></div>
+    </div>
+  </div>
+  <div style="border-right:solid 1px #eee;text-align:right;" class="span1">
+    <h1 style="color:#ddd;">Q&nbsp;</h1>
+  </div>
+  <div class="span8 question">
+    <%= render :partial => "groups/single_question", :locals => { :question => @group.question } %>
+  </div>
+  <div class="row-fluid people"></div><!--/row-->
+</div><!--/row-->
+
+<div id="modal" style="display:none;" class="modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Invite Friends</h3>
+  </div>
+  <form>
+    <div class="modal-body">
+      <p>Invite your friends with a text message.</p>
+      <input style="width:98%;" type="text" name="number" placeholder="ex. 6509636888, 4802314816"/>
+    </div>
+    <div class="modal-footer">
+      <input type="submit"  value="Send Invites" class="btn"/>
+    </div>
+  </form>
+</div>
+<script>
+  $(function() {
+    $("#map").gmap3({
+      action: 'init',
+      options:{
+        center:[37.60315,-122.189004],
+        zoom:9,
+        maxZoom:17,
+        disableDefaultUI:true
+      }
+    })
+
+    <% if @group.question_time.nil? %>
+      //click to start
+      $('<button onclick="next_question(30);" class="btn btn-success">Start Question</button>').appendTo('#counter');
+    <% elsif Time.current < @group.question_time + @group.question_duration %>
+      //please wait
+      start_countdown(<%= (@group.question_duration - (Time.current - @group.question_time)).to_int %>);
+      $(".answers").fadeIn(3000);
+    <% else %>
+      //question is over, click to move on
+      $('<button onclick="next_question(30);" class="btn btn-success">Next Question</button>').appendTo('#counter');
+      $(".answers").fadeIn(3000, function() {
+        $(".incorrect").animate({ opacity: 0 });
+      });
+    <% end %>
+  }); //<--- end document ready
+
+  function start_countdown(duration) {
+    $('#counter').empty();
+    $('#counter').countdown({
+      image: '/assets/digits.png',
+      startTime: duration.toString(),
+      format: 'ss',
+      timerEnd: function() { end_question(); },
+    });
+  }
+
+  function end_question() {
+    //show next question
+    $('#counter').empty();
+    $('<button onclick="next_question();" class="btn btn-success">Next Question</button>').appendTo('#counter');
+    $(".incorrect").animate({ opacity: 0 });
+  }
+
+  function next_question() {
+    $.post("/api/next_question", { group_id : <%= @group.id %> }, function(data) {
+      $(".question").html(data);
+      start_countdown(<%= @group.question_duration %>);
+      $(".answers").fadeIn(3000);
+    });
+  }
+
+  var channel = pusher.subscribe('presence-group-' + <%= @group.id %>);
+  channel.bind('pusher:subscription_succeeded', function(members) {
+    members.each(function(member) {
+      if(member.id != 0) {
+        drop_marker(member);
+        add_to_people(member);
+      }
+    });
+  });
+
+  channel.bind('pusher:member_added', function(member) {
+    drop_marker(member);
+    add_to_people(member);
+  });
+
+  channel.bind('pusher:member_removed', function(member) {
+    remove_marker(member);
+    remove_from_people(member);
+  });
+
+  channel.bind('new_submission', function(data) {
+    alert(data.greeting);
+  });
+
+  function remove_from_people(member) {
+    $('.user' + member.id).fadeOut(1000, function() {
+      $('.user' + member.id).remove();
+    });
+  }
+
+  function add_to_people(member) {
+    if($("user" + member.id).length == 0) {
+      var content = '<div onclick="bounce(' + member.id + ')" class="person user' + member.id + '"><div style="padding:10px;"><img src="' + member.info.image + '"/><h4>' + member.info.name + '</h4></div></div>';
+      $(content).appendTo('.people').hide().fadeIn(1000);
+    }
+  }
+
+  function remove_marker(member) {
+    $('#map').gmap3({
+      action:'clear', 
+      name:'marker', 
+      tag:'user'+member.id
+    },
+    "autofit"
+    ); 
+  }
+
+  function drop_marker(member) {
+    $('#map').gmap3({
+      action: 'addMarker',
+      latLng:[member.info.latitude,member.info.longitude],
+      tag:'user'+member.id,
+      options:{
+        animation: google.maps.Animation.DROP,
+        icon: new google.maps.MarkerImage(member.info.image, new google.maps.Size(20, 20), new google.maps.Point(0,0), new google.maps.Point(0, 32), new google.maps.Size(25, 25))
+      },
+      events:{
+        mouseover: function(marker){
+          $('.user' + member.id).css('background-color', '#e5faff').fadeIn();
+        },
+        mouseout: function() {
+          $('.user' + member.id).css('background-color', '#fdfdfd');
+        }
+      }
+    },
+    "autofit"
+    );
+  }
+
+  function bounce(member_id) {
+    marker = $('#map').gmap3({action:'get', name:'marker', tag:'user'+member_id});
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+      marker.setAnimation(null);
+    }, 1300);
+  }
+</script>

@@ -1,0 +1,126 @@
+
+<div class="row-fluid">
+
+  <div class="span12">
+    <center>
+    <% if current_user %>
+      Welcome <%= current_user.name %>!
+      <%= link_to "Sign Out", signout_path %>
+    <% else %>
+      <div class="well">
+        <a href="/auth/facebook">
+          <img src="http://f.cl.ly/items/272O012s0U2G0L2Q2U0K/facebook_button.png"/>
+        </a>
+      </div>
+    <% end %>
+    </center>
+  </div><!--/span-->
+
+</div>
+
+<% if current_user %>
+<script>
+  var init_pos = '';
+  var flip_thresh = false;
+   
+  function deviceOrientationHandler(LR, FB, DIR) {
+    if(init_pos == '') {
+      init_pos = DIR;
+      return;
+    }
+    if(flip_thresh) {
+      if(DIR > 270 || DIR < 90) {
+        flip_thresh = false;
+        alert("spun!");
+      }
+    } else {
+      if(DIR < 270 && DIR > 90) {
+        flip_thresh = true;
+      }
+    }
+  }
+
+  var geo_stop_accuracy = 15; //integer in meters
+  var geo_stop_milliseconds = 5000; //integer in milliseconds
+  var geo_success_count = 1;
+  var geo_wpid = false;
+  var geo_stopped = false;
+
+  $(function() {
+    start_geolocation();
+    setTimeout(function() {
+      stop_geolocation();
+    }, geo_stop_milliseconds);
+
+    if (window.DeviceOrientationEvent) {
+      console.log("DeviceOrientation is supported");
+      window.addEventListener('deviceorientation', function(eventData) {
+        var LR = eventData.gamma;
+        var FB = eventData.beta;
+        var DIR = eventData.alpha;
+        deviceOrientationHandler(LR, FB, DIR);
+      }, false);
+    } else {
+      alert("Not supported on your device or browser.  Sorry.");
+    }
+  });
+
+  function submit() {
+    $.post("/api/submit", { }, function(data) {
+      //
+    });
+  }
+
+  function update_spinit_position() {
+    $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude }, function(data) {
+      var channel = pusher.subscribe('presence-group-' + <%= @group.id %>);
+    });
+  }
+
+  function start_geolocation() {
+    if(!!navigator.geolocation) {
+      geo_wpid = navigator.geolocation.watchPosition(geo_success, geo_error, {enableHighAccuracy:true, maximumAge:0, timeout:27000});
+    } else {
+      alert('Geo is not supported.');
+    }
+  }
+
+  function stop_geolocation() {
+    if(geo_wpid !== false) {
+      navigator.geolocation.clearWatch(geo_wpid);
+      geo_wpid = false;
+      update_spinit_position();
+    }
+  }
+
+  function geo_success(position) {
+    if(geo_success_count == 1 || position.coords.accuracy < geo_accuracy) {
+      geo_accuracy = position.coords.accuracy;
+      geo_latitude = position.coords.latitude;
+      geo_longitude = position.coords.longitude;
+    }
+    if(geo_accuracy < geo_stop_accuracy) {
+      stop_geolocation();
+    } else {
+      geo_success_count++;
+    }
+  }
+
+  function geo_error(error){
+    switch (error.code) {
+      case error.TIMEOUT:
+        alert('Timeout');
+        break;
+      case error.POSITION_UNAVAILABLE:
+        alert('Position unavailable');
+        break;
+      case error.PERMISSION_DENIED:
+        alert('Permission denied');
+        break;
+      case error.UNKNOWN_ERROR:
+        alert('Unknown error');
+        break;
+    }
+  }
+</script>
+<% end %>

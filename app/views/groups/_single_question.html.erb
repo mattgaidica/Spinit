@@ -1,0 +1,11 @@
+<h1><%= question.body %></h1>
+  <div style="display:none;" class="answers">
+    <% question.answers.each do |answer| %>
+      <% if question.answer_id == answer.id %>
+      <li><%= answer.body %></li>
+      <% else %>
+      <li class="incorrect"><%= answer.body %></li>
+      <% end %>
+    <% end %>
+  </div>
+</div>

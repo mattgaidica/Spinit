@@ -2,20 +2,72 @@
 <html>
 <head>
   <title>Spinit</title>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
   <%= csrf_meta_tags %>
+  <script type="text/javascript">
+    var pusher = new Pusher('<%= Pusher.key %>');
+  </script>
+
   <style>
     .sidebar-nav {
-      height:319px;
+      height:254px;
       overflow-y:scroll;
       overflow-x:hidden;
     }
+    .answers li {
+      display: inline-block;
+      padding: 5px 14px;
+      background-color: #fdfdfd;
+      border: 1px solid #DDD;
+      -webkit-border-radius: 15px;
+      -moz-border-radius: 15px;
+      border-radius: 15px;
+      border-image: initial;
+      color:#00ccff;
+      margin: 15px 10px 0 0;
+    }
+    .person {
+      float:left;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      background-color: #fdfdfd;
+      text-align:center;
+      -moz-box-shadow: 1px 1px 1px 1px #eee;
+      -webkit-box-shadow: 1px 1px 1px 1px #eee;
+      box-shadow: 1px 1px 1px 1px #eee;
+      width:150px;
+      margin:12px;
+    }
+    .person img {
+      margin:10px;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+    }
+    .answered {
+      background:#e4ffe4;
+    }
+    .waiting {
+      background:#fffadc;
+    }
   </style>
 </head>
-<body style="padding-top:40px;padding-bottom:20px;border-top:3px solid #00ccff;">
+<body style="padding-top:40px;padding-bottom:20px;border-top:6px solid #00ccff;">
 
-<%= yield %>
+  <div class="container-fluid">
+    
+    <%= yield %>
+
+    <hr>
+
+    <footer>
+      <p>&copy; 2012</p>
+    </footer>
+
+  </div><!--/.fluid-container-->
 
 </body>
 </html>

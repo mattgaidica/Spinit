@@ -1,6 +1,16 @@
 Spinit::Application.routes.draw do
   match "/auth/:provider/callback" => "sessions#create"
   match "/signout" => "sessions#destroy", :as => :signout
+
+  match "/play/:group_id" => "groups#play"
+  match "/group/:group_id" => "groups#index"
+  match "/api/next_question" => "groups#next_question"
+  match "/api/submit" => "groups#submit"
+
+  match "/positions/update" => "positions#update"
+
+  match "/pusher/auth" => "pusher#auth"
+
   
   # The priority is based upon order of creation:
   # first created -> highest priority.
