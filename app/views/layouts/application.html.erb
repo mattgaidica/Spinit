@@ -49,23 +49,22 @@
     }
     .answered {
       background:#e4ffe4;
+      border: 1px solid green;
     }
     .waiting {
       background:#fffadc;
     }
+    #slider li {
+      padding:25px;
+      font-size:16px;
+    }
   </style>
 </head>
-<body style="padding-top:40px;padding-bottom:20px;border-top:6px solid #00ccff;">
+<body style="padding-top:20px;padding-bottom:20px;border-top:6px solid #00ccff;">
 
   <div class="container-fluid">
     
     <%= yield %>
-
-    <hr>
-
-    <footer>
-      <p>&copy; 2012</p>
-    </footer>
 
   </div><!--/.fluid-container-->
 

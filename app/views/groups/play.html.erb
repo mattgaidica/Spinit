@@ -4,8 +4,12 @@
   <div class="span12">
     <center>
     <% if current_user %>
-      Welcome <%= current_user.name %>!
-      <%= link_to "Sign Out", signout_path %>
+      <div><img src="<%= current_user.image %>"/></div>
+      <div><%= current_user.name %></div>
+      <div><%= link_to "Sign Out", signout_path %></div>
+      <hr>
+      <%= render :partial => "single_question_mobile", :locals => { :question => @group.question } %>
+      <button class="btn" onclick="submit_answer();">Submit</button>
     <% else %>
       <div class="well">
         <a href="/auth/facebook">
@@ -19,6 +23,7 @@
 </div>
 
 <% if current_user %>
+<script src='https://raw.github.com/bradbirdsall/Swipe/master/swipe.js'></script>
 <script>
   var init_pos = '';
   var flip_thresh = false;
@@ -31,7 +36,7 @@
     if(flip_thresh) {
       if(DIR > 270 || DIR < 90) {
         flip_thresh = false;
-        alert("spun!");
+        submit_answer();
       }
     } else {
       if(DIR < 270 && DIR > 90) {
@@ -53,7 +58,6 @@
     }, geo_stop_milliseconds);
 
     if (window.DeviceOrientationEvent) {
-      console.log("DeviceOrientation is supported");
       window.addEventListener('deviceorientation', function(eventData) {
         var LR = eventData.gamma;
         var FB = eventData.beta;
@@ -62,12 +66,24 @@
       }, false);
     } else {
       alert("Not supported on your device or browser.  Sorry.");
+      //add submit button
     }
+
+    mySwipe = new Swipe(
+      document.getElementById('slider'), {
+
+      }
+    );
+
   });
 
-  function submit() {
-    $.post("/api/submit", { }, function(data) {
-      //
+  function submit_answer() {
+    $.post("/api/submit", { group_id : 1, question_id : 1, answer_index : mySwipe.index }, function(data) {
+      if(data == true) {
+        alert('Correct!');
+      } else {
+        alert('Sorry, that is wrong.');
+      }
     });
   }
 

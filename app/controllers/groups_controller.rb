@@ -22,9 +22,19 @@ class GroupsController < ApplicationController
   end
 
   def submit
+    group = Group.find(params[:group_id])
+    question = Question.find(params[:question_id])
+    answer_index = params[:answer_index].to_i
+    if !group.topic.questions[answer_index].nil? && question.answer_id == group.topic.questions[answer_index].id
+      correct = true
+    else
+      correct = false
+    end
+    #add submission?
     Pusher['presence-group-1'].trigger('new_submission', {
-      :greeting => "Hello there!"
+      :correct => correct,
+      :user_id => current_user.id
     })
-    render :text => "thanks!", :status => 200
+    render :json => correct, :status => 200
   end
 end

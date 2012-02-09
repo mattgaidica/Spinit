@@ -1,0 +1,15 @@
+<div>
+  <h2><%= question.body %></h2>
+</div>
+<div id='slider'>
+  <ul>
+    <% first = true; question.answers.each do |answer| %>
+      <% if first %>
+        <% first = false %>
+        <li style='display:block'><%= answer.body %></li>
+      <% else %>
+        <li style='display:none'><%= answer.body %></li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
