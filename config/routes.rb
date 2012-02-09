@@ -2,14 +2,12 @@ Spinit::Application.routes.draw do
   match "/auth/:provider/callback" => "sessions#create"
   match "/signout" => "sessions#destroy", :as => :signout
 
-  match "/play/:group_id" => "groups#play"
-  match "/group/:group_id" => "groups#index"
-  match "/api/next_question" => "groups#next_question"
-  match "/api/submit" => "groups#submit"
-
   match "/positions/update" => "positions#update"
 
   match "/pusher/auth" => "pusher#auth"
+
+  match "/:page_id/play" => "pages#play"
+  match "/:page_id" => "pages#index"
 
   
   # The priority is based upon order of creation:
@@ -61,7 +59,7 @@ Spinit::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  root :to => 'pages#index'
+  root :to => 'pages#splash'
 
   # See how all your routes lay out with "rake routes"
 
