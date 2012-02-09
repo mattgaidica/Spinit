@@ -7,22 +7,10 @@
   <%= javascript_include_tag "application" %>
   <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
   <script src="http://js.pusher.com/1.11/pusher.min.js"></script>
-  <%= csrf_meta_tags %>
-  <script type="text/javascript">
+  <script>
     var pusher = new Pusher('<%= Pusher.key %>');
-  
-    $(function() {
-      $("#map").gmap3({
-        action: 'init',
-        options:{
-          center:[37.60315,-122.189004],
-          zoom:9,
-          maxZoom:17,
-          disableDefaultUI:true
-        }
-      })
-    }); //<--- end document ready
   </script>
+  <%= csrf_meta_tags %>
 
   <style>
     .sidebar-nav {
@@ -63,9 +51,16 @@
     .waiting {
       background:#fffadc;
     }
+    #slider {
+
+    }
     #slider li {
-      padding:25px;
       font-size:16px;
+    }
+    #slider button {
+      width:100%;
+      margin-top:12px;
+      padding:12px;
     }
     .person {
       display:inline-block;
@@ -74,6 +69,7 @@
       height:50px;
       width:50px;
       margin:5px 0 5px 5px;
+      opacity:.5;
     }
     .ribbon-wrap {
       color:#fefefe;

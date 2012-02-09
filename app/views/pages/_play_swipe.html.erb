@@ -1,0 +1,13 @@
+<div id='slider'>
+  <ul>
+    <% display = 'block'; questions.each do |question| %>
+      <li style='display:<%= display %>'>
+        <%= question.body %>
+        <% question.answers.each do |answer| %>
+          <div><button class="btn"><%= answer.body %></button></div>
+        <% end %>
+      </li>
+      <% display = 'inline' %>
+    <% end %>
+  </ul>
+</div>

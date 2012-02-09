@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   has_one :position
   has_many :submissions
+  has_many :takers
+  has_many :pages, :through => :takers
   
   def self.create_with_omniauth(auth)
     create! do |user|

@@ -1,10 +1,10 @@
 class PagesController < ApplicationController
   def index
-    @page = params[:page_id]
+    @page = Page.find(params[:page_id])
   end
 
   def play
-    @page = params[:page_id]
+    @page = Page.find(params[:page_id])
   end
 
   def splash

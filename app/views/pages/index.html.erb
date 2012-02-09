@@ -24,7 +24,7 @@
   <div class="span10">
     <div style="margin-top:18px;" class="well">
       <center>
-        <h1 style="line-height:50px;">Join the fun here: <a href="#">http://bit.ly/2345sdv</a></h1>
+        <h1 style="line-height:50px;">Join here: <%= link_to "http://spinit.herokuapp.com" +play_path, play_path %></h1>
       </center>
     </div>
   </div>
@@ -32,63 +32,24 @@
 <div class="row-fluid">
   <div class="span12">
     <div style="padding:19px;">
-      <div class="person" style="opacity:1;background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap yellow-ribbon pulse">Taking</div></div>
-      </div>
 
-      <div onmouseover="$(this).tooltip('toggle');" rel="tooltip" data-original-title="Matt Gaidica" class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap blue-ribbon">Done</div></div>
-      </div>
+      <% @page.users.each do |user| %>
+        <div onmouseover="$(this).tooltip('toggle');" rel="tooltip" data-original-title="<%= user.name %>" class="person user<%= user.id %>" style="background-image:url('<%= user.image %>');">
+          <div style="padding-top:30px">
+            <%
+              status = Taker.find_by_user_id(user.id).status
+              if status == 0
+            %>
+                <div class="ribbon-wrap yellow-ribbon pulse">waiting</div>
+            <% elsif(status == 1) %>
+                <div class="ribbon-wrap blue-ribbon">done</div>
+            <% else %>
+                <div class="ribbon-wrap green-ribbon">100%</div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
 
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-      <div class="person" style="background-image:url('http://profile.ak.fbcdn.net/hprofile-ak-snc4/370769_53801930_197289114_q.jpg');">
-        <div style="padding-top:30px"><div class="ribbon-wrap green-ribbon">100%</div></div>
-      </div>
-    </div>
   </div>
 <div>
 <div class="row-fluid">
@@ -96,3 +57,96 @@
     <div style="height:350px;" class="well" id="map"></div>
   </div>
 <div>
+<script type="text/javascript">
+
+  $(function() {
+    $("#map").gmap3({
+      action: 'init',
+      options:{
+        center:[37.60315,-122.189004],
+        zoom:9,
+        maxZoom:17,
+        disableDefaultUI:true
+      }
+    });
+    <% @page.users.each do |user| %>
+      $('#map').gmap3({
+        action: 'addMarker',
+        latLng:[<%= user.position.latitude %>,<%= user.position.longitude %>],
+        tag:'user'+<%= user.id %>,
+        options:{
+          animation: google.maps.Animation.DROP/*,
+          icon: new google.maps.MarkerImage(member.info.image, new google.maps.Size(20, 20), new google.maps.Point(0,0), new google.maps.Point(0, 32), new google.maps.Size(25, 25))*/
+        },
+        events:{
+          mouseover: function(marker){
+            $('.user' + <%= user.id %>).css('border', 'red solid 2px').fadeIn();
+          },
+          mouseout: function() {
+            $('.user' + <%= user.id %>).css('border', 'none');
+          }
+        }
+      });
+    <% end %>
+    $('#map').gmap3({
+      action:'autofit'
+    });
+  }); //<--- end document ready
+
+  var channel = pusher.subscribe('presence-<%= @page.id %>');
+
+  channel.bind('pusher:subscription_succeeded', function(members) {
+    members.each(function(member) {
+      if(member.id != 0) {
+        alert("subscribed!");
+        //drop_marker(member);
+        //add_to_people(member);
+      }
+    });
+  });
+
+  channel.bind('pusher:member_added', function(member) {
+    alert('added!');
+    $('.user' + member.id).animate({opacity:1});
+    //add_to_people(member);
+  });
+
+  channel.bind('pusher:member_removed', function(member) {
+    alert('removed');
+    $('.user' + member.id).animate({opacity:.5});
+    //remove_marker(member);
+    //remove_from_people(member);
+  });
+
+  function drop_marker(member) {
+    $('#map').gmap3({
+      action: 'addMarker',
+      latLng:[member.info.latitude,member.info.longitude],
+      tag:'user'+member.id,
+      options:{
+        animation: google.maps.Animation.DROP/*,
+        icon: new google.maps.MarkerImage(member.info.image, new google.maps.Size(20, 20), new google.maps.Point(0,0), new google.maps.Point(0, 32), new google.maps.Size(25, 25))*/
+      },
+      events:{
+        mouseover: function(marker){
+          $('.user' + member.id).css('border', 'red solid 2px').fadeIn();
+        },
+        mouseout: function() {
+          $('.user' + member.id).css('border', 'none');
+        }
+      }
+    },
+    "autofit"
+    );
+  }
+
+  function remove_marker(member) {
+    $('#map').gmap3({
+      action:'clear', 
+      name:'marker', 
+      tag:'user'+member.id
+    },
+    "autofit"
+    ); 
+  }
+</script>

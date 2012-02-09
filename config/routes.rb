@@ -6,7 +6,7 @@ Spinit::Application.routes.draw do
 
   match "/pusher/auth" => "pusher#auth"
 
-  match "/:page_id/play" => "pages#play"
+  match "/:page_id/play" => "pages#play", :as => :play
   match "/:page_id" => "pages#index"
 
   
