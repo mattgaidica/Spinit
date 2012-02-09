@@ -132,7 +132,6 @@
   });
 
   channel.bind('pusher:member_added', function(member) {
-    drop_marker(member);
     add_to_people(member);
   });
 
@@ -152,10 +151,10 @@
   }
 
   function add_to_people(member) {
-    alert($(".user" + member.id).length);
     if($(".user" + member.id).length == 0) {
       var content = '<div onclick="bounce(' + member.id + ')" class="person user' + member.id + '"><div style="padding:10px;"><img src="' + member.info.image + '"/><h4>' + member.info.name + '</h4></div></div>';
       $(content).appendTo('.people').hide().fadeIn(1000);
+      drop_marker(member);
     }
   }
 
