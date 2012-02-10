@@ -6,7 +6,18 @@ class PagesController < ApplicationController
   def play
     @page = Page.find(params[:page_id])
     if current_user
-      @status = Taker.find_by_user_id_and_page_id(current_user.id, @page.id).status
+      if Taker.find_by_user_id_and_page_id(current_user.id, @page.id).nil?
+        Taker.create(:user_id => current_user.id, :page_id => @page.id, :status => 0)
+        user_html = render_to_string(:partial => "pages/user", :locals => { :user => current_user })
+
+        Pusher['page-' + params[:page_id]].trigger('new_user', {
+          :user_id => current_user.id,
+          :user_html => user_html
+        })
+        @status = 0
+      else
+        @status = Taker.find_by_user_id_and_page_id(current_user.id, @page.id).status
+      end
     end
   end
 

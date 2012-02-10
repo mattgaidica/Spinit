@@ -21,7 +21,7 @@
       <div style="margin:15px;">
         <% if @status == 0 %>
           <center class="spin-text">
-            <span style="padding:15px;font-size:16px;"><i class="icon-repeat" style="margin-top:2px;"></i> Spin Phone to Submit</span>
+            <span style="padding:15px;font-size:16px;"><i onclick="submit_answers();" class="icon-repeat" style="margin-top:2px;"></i> Spin Phone to Submit</span>
           </center>
         <% end %>
       </div>
@@ -107,7 +107,7 @@
   var channel = pusher.subscribe('presence-<%= @page.id %>');
 
   channel.bind('pusher:subscription_succeeded', function(members) {
-    $.post("/pages/add_user", { user_id : <%= current_user.id %>, page_id : <%= @page.id %> });
+    //$.post("/pages/add_user", { user_id : <%= current_user.id %>, page_id : <%= @page.id %> });
   });
 
   /*
