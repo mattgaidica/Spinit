@@ -61,7 +61,9 @@
     });
 
     <% @page.users.each do |user| %>
-      drop_marker(<%= user.id %>, <%= user.position.latitude %>, <%= user.position.longitude %>);
+      <% if !user.position.nil? %>
+        drop_marker(<%= user.id %>, <%= user.position.latitude %>, <%= user.position.longitude %>);
+      <% end %>
     <% end %>
 
     $('#map').gmap3({
