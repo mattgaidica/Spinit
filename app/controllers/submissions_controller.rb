@@ -1,6 +1,6 @@
 class SubmissionsController < ApplicationController
   def add
-    page = Page.find(params[:page_id])
+    page = Page.find(params[:page_id].to_i)
     correct = 0
     page.questions.each do |question|
       submission = Submission.create(
