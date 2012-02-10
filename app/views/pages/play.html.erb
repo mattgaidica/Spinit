@@ -6,12 +6,17 @@
       <%= render :partial => "pages/user", :locals => { :user => current_user } %>
       <ul style="display:inline-block;float:right;" class="nav nav-pills">
         <li style="margin:3px 10px;" class="active">
-          <a href="#"><i class="icon-comment icon-white"></i> Chat</a>
+          <a onclick="$('#chat').toggle(); $('#chat-message').focus(); return false;" href="#"><i class="icon-comment icon-white"></i> Chat</a>
         </li>
         <li style="margin:3px;" class="active">
           <a href="/signout"><i class="icon-off icon-white"></i> Signout</a>
         </li>
       </ul>
+
+      <div style="margin:15px 0 15px;display:none;" id="chat">
+        <input style="width:98%;" type="text" class="input-xlarge" id="chat-message"/>
+        <button onclick="send_message();" style="width:100%;" class="btn btn-primary">Send Message</button>
+      </div>
       
       <div style="margin:15px;">
         <% if @status == 0 %>
@@ -127,6 +132,13 @@
 
   function save_answer(question_id, answer_id) {
     answers[question_id] = answer_id;
+  }
+
+  function send_message() {
+    $.post('/messages/add', { body : $('#chat-message').val(), page_id : <%= @page.id %>, user_id : <%= current_user.id %>}, function(data) {
+      $('#chat-message').val('');
+      $('#chat').fadeOut();
+    });
   }
 
   /*
