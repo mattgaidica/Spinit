@@ -91,7 +91,9 @@
 
   channel.bind('new_user', function(data) {
     $(".all-users").prepend(data.user_html);
-    drop_marker(data.user_id, data.latitude, data.longitude);
+    if(typeof data.latitude != "undefined") {
+      drop_marker(data.user_id, data.latitude, data.longitude); 
+    }
   });
 
   channel.bind('pusher:member_added', function(member) {

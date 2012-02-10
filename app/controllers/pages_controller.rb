@@ -19,12 +19,19 @@ class PagesController < ApplicationController
     user = User.find(params[:user_id])
     user_html = render_to_string(:partial => "pages/user", :locals => { :user => user })
 
-    Pusher['presence' + params[:page_id]].trigger('new_user', {
-      :user_id => current_user.id,
-      :latitude => user.position.latitude,
-      :longitude => user.position.longitude,
-      :user_html => user_html
-    })
+    if user.position.nil?
+      Pusher['presence' + params[:page_id]].trigger('new_user', {
+        :user_id => current_user.id,
+        :user_html => user_html
+      })
+    else
+      Pusher['presence' + params[:page_id]].trigger('new_user', {
+        :user_id => current_user.id,
+        :latitude => user.position.latitude,
+        :longitude => user.position.longitude,
+        :user_html => user_html
+      })
+    end
     render :text => 'thanks', :status => 200
   end
 end
