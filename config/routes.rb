@@ -9,10 +9,12 @@ Spinit::Application.routes.draw do
   match "/pusher/guest" => "pusher#guest"
   match "/pusher/user" => "pusher#user"
 
+  match "/messages/add" => "messages#add"
+
+  match "/pages/add_user" => "pages#add_user"
+
   match "/:page_id/play" => "pages#play", :as => :play
   match "/:page_id" => "pages#index"
-
-  match "/messages/add" => "messages#add"
 
   
   # The priority is based upon order of creation:

@@ -1,0 +1,14 @@
+<div onmouseover="$(this).tooltip('toggle');" rel="tooltip" data-original-title="<%= user.name %>" class="person user<%= user.id %>" style="background-image:url('<%= user.image %>');">
+  <div style="padding-top:30px">
+    <%
+      status = Taker.find_by_user_id(user.id).status
+      if status == 0
+    %>
+        <div class="ribbon-wrap yellow-ribbon pulse">waiting</div>
+    <% elsif(status == 1) %>
+        <div class="ribbon-wrap blue-ribbon">done</div>
+    <% else %>
+        <div class="ribbon-wrap green-ribbon">100%</div>
+    <% end %>
+  </div>
+</div>

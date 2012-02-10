@@ -72,6 +72,11 @@
   Pusher.channel_auth_endpoint = '/pusher/user';
   var channel = pusher.subscribe('presence-<%= @page.id %>');
 
+  channel.bind('pusher:subscription_succeeded', function(members) {
+    //post to add user to page, push new_user to channel
+    $.post("/pages/add_user", { user_id : <%= current_user.id %>, page_id : <%= @page.id %> });
+  });
+
   channel.bind('pusher:member_added', function(member) {
     alert('added' + member.id);
     //$('.user' + member.id).animate({opacity:1});
@@ -103,7 +108,7 @@
 
   function update_spinit_position() {
     $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude, page_id : <%= @page.id %> }, function(data) {
-      
+
     });
   }
 

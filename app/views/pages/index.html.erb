@@ -34,23 +34,9 @@
 
 <div class="row-fluid">
   <div class="span12">
-    <div style="padding:19px;">
-
+    <div class="all-users" style="padding:19px;">
       <% @page.users.each do |user| %>
-        <div onmouseover="$(this).tooltip('toggle');" rel="tooltip" data-original-title="<%= user.name %>" class="person user<%= user.id %>" style="background-image:url('<%= user.image %>');">
-          <div style="padding-top:30px">
-            <%
-              status = Taker.find_by_user_id(user.id).status
-              if status == 0
-            %>
-                <div class="ribbon-wrap yellow-ribbon pulse">waiting</div>
-            <% elsif(status == 1) %>
-                <div class="ribbon-wrap blue-ribbon">done</div>
-            <% else %>
-                <div class="ribbon-wrap green-ribbon">100%</div>
-            <% end %>
-          </div>
-        </div>
+        <%= render :partial => "pages/user", :locals => { :user => user } %>
       <% end %>
     </div>
   </div>
@@ -101,7 +87,12 @@
   channel.bind('update_position', function(data) {
     remove_marker(data.user_id);
     drop_marker(data.user_id, data.latitude, data.longitude);
-  })
+  });
+
+  channel.bind('new_user', function(data) {
+    $(".all-users").prepend(data.user_html);
+    drop_marker(data.user_id, data.latitude, data.longitude);
+  });
 
   channel.bind('pusher:member_added', function(member) {
     $('.user' + member.id).animate({opacity:1});
@@ -110,6 +101,7 @@
       function(data) {
         $(".message-center").prepend(data);
     });
+
   });
 
   channel.bind('pusher:member_removed', function(member) {
