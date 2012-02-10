@@ -4,18 +4,24 @@
   <div class="span12">
     <% if current_user %>
       <%= render :partial => "pages/user", :locals => { :user => current_user } %>
-      <ul style="display:inline-block;vertical-align:bottom;float:right;" class="nav nav-pills">
-        <li style="margin-right:10px;" class="active">
+      <ul style="display:inline-block;float:right;" class="nav nav-pills">
+        <li style="margin:3px 10px;" class="active">
           <a href="#"><i class="icon-comment icon-white"></i> Chat</a>
         </li>
-        <li class="active">
+        <li style="margin:3px;" class="active">
           <a href="/signout"><i class="icon-off icon-white"></i> Signout</a>
         </li>
       </ul>
 
+      
       <div style="margin:15px;">
-        <center><span style="padding:15px;font-size:16px;"><i class="icon-repeat" style="margin-top:2px;"></i> Spin Phone to Submit</span></center>
+        <% if @status == 0 %>
+          <center class="spin-text">
+            <span style="padding:15px;font-size:16px;"><i class="icon-repeat" style="margin-top:2px;"></i> Spin Phone to Submit</span>
+          </center>
+        <% end %>
       </div>
+      
       <div class="well">
         <%= render :partial => "swipe", :locals => { :questions => @page.questions } %>
       </div>
@@ -46,7 +52,7 @@
     if(flip_thresh) {
       if(DIR > 270 || DIR < 90) {
         flip_thresh = false;
-        submit_answer();
+        submit_answers();
       }
     } else {
       if(DIR < 270 && DIR > 90) {
@@ -60,6 +66,11 @@
   var geo_success_count = 1;
   var geo_wpid = false;
   var geo_stopped = false;
+  var answers = {};
+
+  <% @page.questions.each do |question| %>
+    answers[<%= question.id %>] = "";
+  <% end %>
 
   $(function() {
     start_geolocation();
@@ -76,7 +87,7 @@
       }, false);
     } else {
       //alert("Not supported on your device or browser.  Sorry.");
-      //add submit button
+      $('.spin-text').html('<button onclick="$(this).hide();submit_answers();" class="btn">Submit Answers</button>');
     }
 
     mySwipe = new Swipe(document.getElementById('slider'), { callback : 
@@ -107,6 +118,17 @@
     //remove_from_people(member);
   });
   */
+
+  function submit_answers() {
+    $.post('/submissions/add', { answers : answers, page_id : <%= @page.id %>}, function(data) {
+      alert(data);
+      location.reload(true);
+    });
+  }
+
+  function save_answer(question_id, answer_id) {
+    answers[question_id] = answer_id;
+  }
 
   /*
   function submit_answer() {

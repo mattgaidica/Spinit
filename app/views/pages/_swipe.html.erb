@@ -11,7 +11,22 @@
       <li style='display:<%= display %>'>
         <%= question.body %>
         <% question.answers.each do |answer| %>
-          <button onclick="$('.answer').removeClass('btn-success');$(this).addClass('btn-success');" class="answer btn btn-large disabled"><%= answer.body %></button>
+          <% if @status == 0 %>
+            <button onclick="$('.question<%= question.id %>').removeClass('btn-success');$(this).addClass('btn-success');save_answer(<%= question.id %>,<%= answer.id %>);" class="question<%= question.id %> btn btn-large disabled"><%= answer.body %></button>
+          <% else %>
+            <% if Submission.where("page_id = ? AND user_id = ? AND question_id = ?", @page.id, current_user.id, question.id).first.answer_id == answer.id %>
+              <button class="btn-success btn btn-large disabled">
+              <% if question.answer_id == answer.id %>
+                <i class="icon-ok icon-white"></i>&nbsp;
+              <% end %>
+            <% else %>
+              <button class="btn btn-large disabled">
+              <% if question.answer_id == answer.id %>
+                <i class="icon-ok"></i>&nbsp;
+              <% end %>
+            <% end %> 
+            <%= answer.body %></button>
+          <% end %>
         <% end %>
       </li>
       <% display = 'inline' %>

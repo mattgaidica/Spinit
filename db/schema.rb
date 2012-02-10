@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120210071316) do
+ActiveRecord::Schema.define(:version => 20120210115957) do
 
   create_table "answers", :force => true do |t|
     t.integer  "question_id"
@@ -51,7 +51,7 @@ ActiveRecord::Schema.define(:version => 20120210071316) do
   end
 
   create_table "submissions", :force => true do |t|
-    t.integer  "group_id"
+    t.integer  "page_id"
     t.integer  "question_id"
     t.integer  "user_id"
     t.integer  "answer_id"

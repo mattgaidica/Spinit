@@ -96,6 +96,14 @@
     }
   });
 
+  channel.bind('add_message', function(data) {
+    $('.message-center').prepend(data.message_html);
+  });
+
+  channel.bind('update_user', function(data) {
+    $('.user' + data.user_id).replaceWith(data.user_html);
+  });
+
   function drop_marker(user_id, latitude, longitude) {
     $('#map').gmap3({
       action: 'addMarker',

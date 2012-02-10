@@ -11,6 +11,8 @@ Spinit::Application.routes.draw do
   match "/messages/add" => "messages#add"
 
   match "/pages/add_user" => "pages#add_user"
+  
+  match "/submissions/add" => "submissions#add"
 
   match "/:page_id/play" => "pages#play", :as => :play
   match "/:page_id" => "pages#index"

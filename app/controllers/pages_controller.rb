@@ -5,6 +5,9 @@ class PagesController < ApplicationController
 
   def play
     @page = Page.find(params[:page_id])
+    if current_user
+      @status = Taker.find_by_user_id_and_page_id(current_user.id, @page.id).status
+    end
   end
 
   def splash
