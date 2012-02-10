@@ -4,13 +4,14 @@
   </div>
   <div class="span4">
     <div style="height:323px;padding:9px 0;" class="well sidebar-nav">
-      <ul class="nav nav-list">
-        <li style="text-align:center;margin:10px;" class="nav-header">Announcement</li>
-        <li><span class="message">Test</span></li>
-        <li><span class="message">Test</span></li>
-        <li><span class="message">Test</span></li>
-        <li><span class="message">Test</span></li>
-        <li><span class="message">Test</span></li>
+      <ul class="message-center nav nav-list">
+        <% @page.messages.reverse.each do |message| %>
+          <% if message.user_id %>
+            <%= render :partial => "messages/from_user", :locals => { :message => message } %>
+          <% else %>
+            <%= render :partial => "messages/announcement", :locals => { :message => message } %>
+          <% end %>
+        <% end %>
       </ul>
     </div><!--/.well -->
   </div>
@@ -72,25 +73,11 @@
         disableDefaultUI:true
       }
     });
+
     <% @page.users.each do |user| %>
-      $('#map').gmap3({
-        action: 'addMarker',
-        latLng:[<%= user.position.latitude %>,<%= user.position.longitude %>],
-        tag:'user'+<%= user.id %>,
-        options:{
-          animation: google.maps.Animation.DROP/*,
-          icon: new google.maps.MarkerImage(member.info.image, new google.maps.Size(20, 20), new google.maps.Point(0,0), new google.maps.Point(0, 32), new google.maps.Size(25, 25))*/
-        },
-        events:{
-          mouseover: function(marker){
-            $('.user' + <%= user.id %>).css('border', 'red solid 2px').fadeIn();
-          },
-          mouseout: function() {
-            $('.user' + <%= user.id %>).css('border', 'none');
-          }
-        }
-      });
+      drop_marker(<%= user.id %>, <%= user.position.latitude %>, <%= user.position.longitude %>);
     <% end %>
+
     $('#map').gmap3({
       action:'autofit'
     });
@@ -111,38 +98,43 @@
   });
   */
 
-  channel.bind('greet', function(data) {
-    alert(data);
+  channel.bind('update_position', function(data) {
+    remove_marker(data.user_id);
+    drop_marker(data.user_id, data.latitude, data.longitude);
   })
 
   channel.bind('pusher:member_added', function(member) {
-    alert('added!');
-    //$('.user' + member.id).animate({opacity:1});
-    //add_to_people(member);
+    $('.user' + member.id).animate({opacity:1});
+
+    $.post("/messages/add", { body : member.info.name + ' joined the page', page_id : <%= @page.id %> }, 
+      function(data) {
+        $(".message-center").prepend(data);
+    });
   });
 
   channel.bind('pusher:member_removed', function(member) {
-    alert('removed');
-    //$('.user' + member.id).animate({opacity:.5});
-    //remove_marker(member);
-    //remove_from_people(member);
+    $('.user' + member.id).animate({opacity:.5});
+    $.post("/messages/add", { body : member.info.name + ' left the page', page_id : <%= @page.id %> }, 
+      function(data) {
+        $(".message-center").prepend(data);
+    });
   });
 
-  function drop_marker(member) {
+  function drop_marker(user_id, latitude, longitude) {
     $('#map').gmap3({
       action: 'addMarker',
-      latLng:[member.info.latitude,member.info.longitude],
-      tag:'user'+member.id,
+      latLng:[latitude,longitude],
+      tag:'user'+user_id,
       options:{
         animation: google.maps.Animation.DROP/*,
         icon: new google.maps.MarkerImage(member.info.image, new google.maps.Size(20, 20), new google.maps.Point(0,0), new google.maps.Point(0, 32), new google.maps.Size(25, 25))*/
       },
       events:{
         mouseover: function(marker){
-          $('.user' + member.id).css('border', 'red solid 2px').fadeIn();
+          $('.user' + user_id).tooltip('toggle');
         },
         mouseout: function() {
-          $('.user' + member.id).css('border', 'none');
+          $('.user' + user_id).tooltip('toggle');
         }
       }
     },
@@ -150,11 +142,11 @@
     );
   }
 
-  function remove_marker(member) {
+  function remove_marker(user_id) {
     $('#map').gmap3({
       action:'clear', 
       name:'marker', 
-      tag:'user'+member.id
+      tag:'user'+user_id
     },
     "autofit"
     ); 

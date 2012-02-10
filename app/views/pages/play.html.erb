@@ -102,8 +102,8 @@
   */
 
   function update_spinit_position() {
-    $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude }, function(data) {
-      //var channel = pusher.subscribe('presence-<%= @page.id %>');
+    $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude, page_id : <%= @page.id %> }, function(data) {
+      
     });
   }
 

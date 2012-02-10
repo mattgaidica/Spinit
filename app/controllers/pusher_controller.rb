@@ -3,7 +3,7 @@ class PusherController < ApplicationController
   
   def guest
     response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
-      :user_id => rand(100000),
+      :user_id => 0,
       :user_info => {}
     })
     render :json => response

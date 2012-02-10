@@ -3,6 +3,7 @@ class User < ActiveRecord::Base
   has_many :submissions
   has_many :takers
   has_many :pages, :through => :takers
+  has_many :messages
   
   def self.create_with_omniauth(auth)
     create! do |user|

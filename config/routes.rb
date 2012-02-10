@@ -12,6 +12,8 @@ Spinit::Application.routes.draw do
   match "/:page_id/play" => "pages#play", :as => :play
   match "/:page_id" => "pages#index"
 
+  match "/messages/add" => "messages#add"
+
   
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -3,4 +3,5 @@ class Page < ActiveRecord::Base
   has_many :users, :through => :takers
   has_many :submissions
   has_many :questions
+  has_many :messages
 end
