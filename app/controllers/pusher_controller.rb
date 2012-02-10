@@ -11,15 +11,25 @@ class PusherController < ApplicationController
 
   def user
     if current_user
-      response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
-        :user_id => current_user.id, # => required
-        :user_info => { # => optional - for example
-          :name => current_user.name,
-          :image => current_user.image,
-          :latitude => current_user.position.latitude,
-          :longitude => current_user.position.longitude,
-        }
-      })
+      if current_user.position.nil?
+        response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
+          :user_id => current_user.id, # => required
+          :user_info => { # => optional - for example
+            :name => current_user.name,
+            :image => current_user.image
+          }
+        })
+      else
+        response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
+          :user_id => current_user.id, # => required
+          :user_info => { # => optional - for example
+            :name => current_user.name,
+            :image => current_user.image,
+            :latitude => current_user.position.latitude,
+            :longitude => current_user.position.longitude
+          }
+        })
+      end
       render :json => response
     else
       render :text => "Not authorized", :status => '403'
