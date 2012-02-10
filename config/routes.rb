@@ -6,8 +6,7 @@ Spinit::Application.routes.draw do
 
   match "/positions/update" => "positions#update"
 
-  match "/pusher/guest" => "pusher#guest"
-  match "/pusher/user" => "pusher#user"
+  match "/pusher/auth" => "pusher#auth"
 
   match "/messages/add" => "messages#add"
 

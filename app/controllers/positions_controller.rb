@@ -6,7 +6,7 @@ class PositionsController < ApplicationController
       position.update_attributes(:latitude => params[:latitude], :longitude => params[:longitude])
       render :text => 'Position updated.', :status => 200
       #update map?
-      Pusher['presence' + params[:page_id]].trigger('update_position', {
+      Pusher['page-' + params[:page_id]].trigger('update_position', {
         :user_id => current_user.id,
         :latitude => params[:latitude],
         :longitude => params[:longitude]

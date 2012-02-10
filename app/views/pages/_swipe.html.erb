@@ -1,10 +1,17 @@
+<div class="btn-toolbar">
+  <span style="font-size:16px;color:#999;line-height:30px">Question <span id="question-pos">1</span> of <%= questions.size %></span>
+  <div style="float:right;" class="btn-group">
+    <a onclick='mySwipe.prev();return false;' href="#" class="btn"><i class="icon-chevron-left"></i></a>
+    <a onclick='mySwipe.next();return false;' href="#" class="btn"><i class="icon-chevron-right"></i></a>
+  </div>
+</div>
 <div id='slider'>
-  <ul>
+  <ul style="margin:0">
     <% display = 'block'; questions.each do |question| %>
       <li style='display:<%= display %>'>
         <%= question.body %>
         <% question.answers.each do |answer| %>
-          <div><button class="btn"><%= answer.body %></button></div>
+          <button onclick="$('.answer').removeClass('btn-success');$(this).addClass('btn-success');" class="answer btn btn-large disabled"><%= answer.body %></button>
         <% end %>
       </li>
       <% display = 'inline' %>

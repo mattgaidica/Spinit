@@ -3,16 +3,29 @@
 
   <div class="span12">
     <% if current_user %>
-      <div><img src="<%= current_user.image %>"/></div>
-      <div><%= current_user.name %></div>
-      <div><%= link_to "Sign Out", signout_path %></div>
-      <hr>
-      <%= render :partial => "swipe", :locals => { :questions => @page.questions } %>
+      <%= render :partial => "pages/user", :locals => { :user => current_user } %>
+      <ul style="display:inline-block;vertical-align:bottom;float:right;" class="nav nav-pills">
+        <li style="margin-right:10px;" class="active">
+          <a href="#"><i class="icon-comment icon-white"></i> Chat</a>
+        </li>
+        <li class="active">
+          <a href="/signout"><i class="icon-off icon-white"></i> Signout</a>
+        </li>
+      </ul>
+
+      <div style="margin:15px;">
+        <center><span style="padding:15px;font-size:16px;"><i class="icon-repeat" style="margin-top:2px;"></i> Spin Phone to Submit</span></center>
+      </div>
+      <div class="well">
+        <%= render :partial => "swipe", :locals => { :questions => @page.questions } %>
+      </div>
     <% else %>
       <div class="well">
-        <a href="/auth/facebook">
-          <img src="http://f.cl.ly/items/272O012s0U2G0L2Q2U0K/facebook_button.png"/>
-        </a>
+        <center>
+          <a href="/auth/facebook">
+            <img src="http://f.cl.ly/items/272O012s0U2G0L2Q2U0K/facebook_button.png"/>
+          </a>
+        </center>
       </div>
     <% end %>
   </div><!--/span-->
@@ -62,21 +75,25 @@
         deviceOrientationHandler(LR, FB, DIR);
       }, false);
     } else {
-      alert("Not supported on your device or browser.  Sorry.");
+      //alert("Not supported on your device or browser.  Sorry.");
       //add submit button
     }
 
-    mySwipe = new Swipe(document.getElementById('slider'));
+    mySwipe = new Swipe(document.getElementById('slider'), { callback : 
+      function(event,index,elem) {
+        $('#question-pos').html(index + 1);
+      }
+    });
+
   });
 
-  Pusher.channel_auth_endpoint = '/pusher/user';
   var channel = pusher.subscribe('presence-<%= @page.id %>');
 
   channel.bind('pusher:subscription_succeeded', function(members) {
-    //post to add user to page, push new_user to channel
     $.post("/pages/add_user", { user_id : <%= current_user.id %>, page_id : <%= @page.id %> });
   });
 
+  /*
   channel.bind('pusher:member_added', function(member) {
     alert('added' + member.id);
     //$('.user' + member.id).animate({opacity:1});
@@ -89,6 +106,7 @@
     //remove_marker(member);
     //remove_from_people(member);
   });
+  */
 
   /*
   function submit_answer() {
@@ -103,9 +121,7 @@
   */
 
   function update_spinit_position() {
-    $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude, page_id : <%= @page.id %> }, function(data) {
-
-    });
+    $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude, page_id : <%= @page.id %> });
   }
 
   function start_geolocation() {

@@ -35,7 +35,7 @@
 <div class="row-fluid">
   <div class="span12">
     <div class="all-users" style="padding:19px;">
-      <% @page.users.each do |user| %>
+      <% @page.users.reverse.each do |user| %>
         <%= render :partial => "pages/user", :locals => { :user => user } %>
       <% end %>
     </div>
@@ -55,7 +55,7 @@
       options:{
         center:[37.60315,-122.189004],
         zoom:9,
-        maxZoom:17,
+        maxZoom:18,
         disableDefaultUI:true
       }
     });
@@ -71,8 +71,7 @@
     });
   }); //<--- end document ready
 
-  Pusher.channel_auth_endpoint = '/pusher/guest';
-  var channel = pusher.subscribe('presence-<%= @page.id %>');
+  var channel = pusher.subscribe('page-<%= @page.id %>');
 
   /*
   channel.bind('pusher:subscription_succeeded', function(members) {
@@ -92,28 +91,9 @@
   });
 
   channel.bind('new_user', function(data) {
-    $(".all-users").prepend(data.user_html);
-    if(typeof data.latitude != "undefined") {
-      drop_marker(data.user_id, data.latitude, data.longitude); 
+    if($('.user' + data.user_id).length == 0) {
+      $(".all-users").prepend(data.user_html); 
     }
-  });
-
-  channel.bind('pusher:member_added', function(member) {
-    $('.user' + member.id).animate({opacity:1});
-
-    $.post("/messages/add", { body : member.info.name + ' joined the page', page_id : <%= @page.id %> }, 
-      function(data) {
-        $(".message-center").prepend(data);
-    });
-
-  });
-
-  channel.bind('pusher:member_removed', function(member) {
-    $('.user' + member.id).animate({opacity:.5});
-    $.post("/messages/add", { body : member.info.name + ' left the page', page_id : <%= @page.id %> }, 
-      function(data) {
-        $(".message-center").prepend(data);
-    });
   });
 
   function drop_marker(user_id, latitude, longitude) {
