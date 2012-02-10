@@ -23,7 +23,7 @@ class SubmissionsController < ApplicationController
     else
       render_text = "You got " + correct.to_s + " out of " + page.questions.size.to_s
       taker.status = 1
-      message_body = current_user.name + " got 100%"
+      message_body = current_user.name + " is done"
       message = Message.create(:body => message_body, :page_id => page.id);
     end
     taker.save

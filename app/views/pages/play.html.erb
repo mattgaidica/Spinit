@@ -13,6 +13,7 @@
         </li>
       </ul>
 
+<div class="spin"></div>
       
       <div style="margin:15px;">
         <% if @status == 0 %>
@@ -45,6 +46,7 @@
   var flip_thresh = false;
    
   function deviceOrientationHandler(LR, FB, DIR) {
+    $('.spin').html(String(DIR));
     if(init_pos == '') {
       init_pos = DIR;
       return;

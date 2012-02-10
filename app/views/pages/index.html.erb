@@ -135,4 +135,12 @@
     "autofit"
     ); 
   }
+
+  function bounce(member_id) {
+    marker = $('#map').gmap3({action:'get', name:'marker', tag:'user'+member_id});
+    marker.setAnimation(google.maps.Animation.BOUNCE);
+    setTimeout(function() {
+      marker.setAnimation(null);
+    }, 1300);
+  }
 </script>
