@@ -77,8 +77,8 @@
   <% end %>
 
   $(function() {
-    start_geolocation();
     <% if @status == 0 %>
+      start_geolocation();
       setTimeout(function() {
         stop_geolocation();
       }, geo_stop_milliseconds);
