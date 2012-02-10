@@ -7,7 +7,7 @@
       <div><%= current_user.name %></div>
       <div><%= link_to "Sign Out", signout_path %></div>
       <hr>
-      <%= render :partial => "pages/play_swipe", :locals => { :questions => @page.questions } %>
+      <%= render :partial => "swipe", :locals => { :questions => @page.questions } %>
     <% else %>
       <div class="well">
         <a href="/auth/facebook">
@@ -69,20 +69,25 @@
     mySwipe = new Swipe(document.getElementById('slider'));
   });
 
+  Pusher.channel_auth_endpoint = '/pusher/user';
   var channel = pusher.subscribe('presence-<%= @page.id %>');
 
   channel.bind('pusher:member_added', function(member) {
-    alert('added!');
-    $('.user' + member.id).animate({opacity:1});
+    alert('added' + member.id);
+    //$('.user' + member.id).animate({opacity:1});
     //add_to_people(member);
   });
 
   channel.bind('pusher:member_removed', function(member) {
-    alert('removed');
-    $('.user' + member.id).animate({opacity:.5});
+    alert('removed' + member.id);
+    //$('.user' + member.id).animate({opacity:.5});
     //remove_marker(member);
     //remove_from_people(member);
   });
+
+  channel.bind('greet', function(data) {
+    alert(data);
+  })
 
   /*
   function submit_answer() {
@@ -98,8 +103,7 @@
 
   function update_spinit_position() {
     $.post("/positions/update", { latitude : geo_latitude, longitude : geo_longitude }, function(data) {
-      var channel = pusher.subscribe('presence-<%= @page.id %>');
-      alert('online');
+      //var channel = pusher.subscribe('presence-<%= @page.id %>');
     });
   }
 

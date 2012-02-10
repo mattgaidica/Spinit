@@ -1,7 +1,15 @@
 class PusherController < ApplicationController
-  protect_from_forgery :except => :auth # stop rails CSRF protection for this action
+  protect_from_forgery :except => [:guest, :user] # stop rails CSRF protection for this action
   
-  def auth
+  def guest
+    response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
+      :user_id => rand(100000),
+      :user_info => {}
+    })
+    render :json => response
+  end
+
+  def user
     if current_user
       response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
         :user_id => current_user.id, # => required
@@ -14,11 +22,7 @@ class PusherController < ApplicationController
       })
       render :json => response
     else
-      #render :text => "Not authorized", :status => '403'
-      response = Pusher[params[:channel_name]].authenticate(params[:socket_id], {
-        :user_id => 0, # => required
-      })
-      render :json => response
+      render :text => "Not authorized", :status => '403'
     end
   end
 end

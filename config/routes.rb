@@ -1,10 +1,13 @@
 Spinit::Application.routes.draw do
+  get "play/index"
+
   match "/auth/:provider/callback" => "sessions#create"
   match "/signout" => "sessions#destroy", :as => :signout
 
   match "/positions/update" => "positions#update"
 
-  match "/pusher/auth" => "pusher#auth"
+  match "/pusher/guest" => "pusher#guest"
+  match "/pusher/user" => "pusher#user"
 
   match "/:page_id/play" => "pages#play", :as => :play
   match "/:page_id" => "pages#index"

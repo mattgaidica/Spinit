@@ -15,6 +15,7 @@
     </div><!--/.well -->
   </div>
 </div>
+
 <div class="row-fluid">
   <div class="span2">
     <center>
@@ -29,6 +30,7 @@
     </div>
   </div>
 </div>
+
 <div class="row-fluid">
   <div class="span12">
     <div style="padding:19px;">
@@ -49,9 +51,10 @@
           </div>
         </div>
       <% end %>
-
+    </div>
   </div>
-<div>
+</div>
+
 <div class="row-fluid">
   <div class="span12">
     <div style="height:350px;" class="well" id="map"></div>
@@ -93,27 +96,34 @@
     });
   }); //<--- end document ready
 
+  Pusher.channel_auth_endpoint = '/pusher/guest';
   var channel = pusher.subscribe('presence-<%= @page.id %>');
 
+  /*
   channel.bind('pusher:subscription_succeeded', function(members) {
     members.each(function(member) {
+      alert('subscribed' + member.id);
       if(member.id != 0) {
-        alert("subscribed!");
         //drop_marker(member);
         //add_to_people(member);
       }
     });
   });
+  */
+
+  channel.bind('greet', function(data) {
+    alert(data);
+  })
 
   channel.bind('pusher:member_added', function(member) {
     alert('added!');
-    $('.user' + member.id).animate({opacity:1});
+    //$('.user' + member.id).animate({opacity:1});
     //add_to_people(member);
   });
 
   channel.bind('pusher:member_removed', function(member) {
     alert('removed');
-    $('.user' + member.id).animate({opacity:.5});
+    //$('.user' + member.id).animate({opacity:.5});
     //remove_marker(member);
     //remove_from_people(member);
   });
